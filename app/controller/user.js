@@ -6,7 +6,7 @@ const Controller = require('egg').Controller;
 class UserController extends Controller {
   async register() {
     const { ctx } = this;
-    const { username, password } = ctx.request.body; // 获取注册需要的参数
+    const { username, password, nickname } = ctx.request.body; // 获取注册需要的参数
     const userInfo = await ctx.service.user.getUserByName(username); // 获取用户信息
 
     // 判断是否已经存在
@@ -25,6 +25,7 @@ class UserController extends Controller {
     const result = await ctx.service.user.register({
       username,
       password,
+      nickname,
       ctime: new Date().getTime(),
       signature: '世界和平。',
       avatar: defaultAvatar,
@@ -109,13 +110,14 @@ class UserController extends Controller {
         username: userInfo.username,
         signature: userInfo.signature || '',
         avatar: userInfo.avatar || defaultAvatar,
+        nickname: userInfo.nickname || '不知名先生',
       },
     };
   }
   async editUserInfo() {
     const { ctx, app } = this;
     // 通过 post 请求，在请求体中获取签名字段 signature
-    const { signature = '', avatar = '' } = ctx.request.body;
+    const { signature = '', avatar = '', nickname = '' } = ctx.request.body;
 
     try {
       let user_id = null;
@@ -131,6 +133,7 @@ class UserController extends Controller {
         ...userInfo,
         signature,
         avatar,
+        nickname,
       });
 
       ctx.body = {
@@ -140,6 +143,7 @@ class UserController extends Controller {
           id: user_id,
           signature,
           username: userInfo.username,
+          nickname,
         },
       };
     } catch (error) {

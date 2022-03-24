@@ -1,35 +1,61 @@
 'use strict';
-
 const Controller = require('egg').Controller;
-
+const { responseFormat, responseHandleFormat } = require('../utils/utils');
 class TypeController extends Controller {
   async query() {
     const { ctx } = this;
-    const params = ctx.query;
-    // 账单的相关参数，这里注意要把账单的 id 也传进来
-    const limit = params.limit ? params.limit : 10;
-    const page = params.page ? params.page : 1;
-    delete params.limit;
-    delete params.page;
-    try {
-      const pageList = await ctx.service.type.queryCount();
-      const result = await ctx.service.type.query(params, limit, page - 1);
-      ctx.body = {
-        code: 200,
-        msg: '请求成功',
-        data: {
-          list: result,
-          total: pageList.length,
-          page,
-          pages: Math.ceil(pageList.length / limit),
-        },
-      };
-    } catch (error) {
-      ctx.body = {
-        code: 500,
-        msg: '系统错误',
-        data: null,
-      };
+    const { page = 1, ...filter } = ctx.query;
+    const limit = parseInt(ctx.query.limit) || 10;
+    // 假删除
+    const whereObj = { deleteFlag: 1 };
+    for (const x in filter) {
+      switch (x) {
+        case 'id':
+          whereObj.id = filter[x];
+          break;
+        case 'name':
+          whereObj.name = filter[x];
+          break;
+        default:
+          break;
+      }
+    }
+    const { total, list } = await ctx.service.type.query({
+      whereObj,
+      limit: limit ? limit : null,
+      offset: page ? (page - 1) * limit : null,
+    });
+    ctx.body = responseFormat(true, {
+      limit,
+      page,
+      total,
+      pages: Math.ceil(total / limit),
+      list,
+    });
+  }
+  async saveType() {
+    const { ctx } = this;
+    const { name, id } = ctx.request.body;
+    let result = null;
+    if (id) {
+      result = await ctx.service.type.update({ name, id });
+    } else {
+      result = await ctx.service.type.add({ name });
+    }
+    if (result) {
+      ctx.body = responseHandleFormat(true);
+    } else {
+      responseHandleFormat(false);
+    }
+  }
+  async deleteType() {
+    const { ctx } = this;
+    const { id } = ctx.request.body;
+    const result = await ctx.service.type.delete(id);
+    if (result) {
+      ctx.body = responseHandleFormat(true);
+    } else {
+      responseHandleFormat(false);
     }
   }
 }

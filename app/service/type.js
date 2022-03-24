@@ -3,24 +3,53 @@
 const Service = require('egg').Service;
 
 class TypeService extends Service {
-  async queryCount() {
+  async query(params) {
+    const { app } = this;
+    const { whereObj, limit, offset } = params;
+    try {
+      const list = await app.mysql.select('type', {
+        where: whereObj,
+        limit,
+        offset,
+      });
+      const total = await app.mysql.count('type', whereObj);
+      return { list, total };
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  }
+  async add(params) {
     const { app } = this;
     try {
-      const result = app.mysql.select('type');
+      const result = await app.mysql.insert('type', params);
       return result;
     } catch (error) {
       console.log(error);
       return null;
     }
   }
-  async query(params, limit = 10, offset = 0) {
+  async update(params) {
     const { app } = this;
     try {
-      limit = parseInt(limit);
-      const result = app.mysql.select('type', {
-        where: params,
-        limit,
-        offset: offset * limit,
+      const result = await app.mysql.update('type', params, {
+        where: {
+          id: params.id,
+        },
+      });
+      return result;
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  }
+  async delete(id) {
+    const { app } = this;
+    try {
+      const result = await app.mysql.update('type', { deleteFlag: 0 }, {
+        where: {
+          id,
+        },
       });
       return result;
     } catch (error) {
