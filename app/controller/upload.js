@@ -11,8 +11,9 @@ class UploadController extends Controller {
   async upload() {
     const { ctx } = this;
     // 需要前往 config/config.default.js 设置 config.multipart 的 mode 属性为 file
+    console.log('2222', ctx.request.files);
     const file = ctx.request.files[0];
-    console.log(file);
+
     // 声明存放资源的路径
     let uploadDir = '';
 
@@ -27,9 +28,11 @@ class UploadController extends Controller {
       await mkdirp(dir); // 不存在就创建目录
       // 返回图片保存的路径
       uploadDir = path.join(dir, date + path.extname(file.filename));
+      await ctx.service.upload.add({ img_url: uploadDir });
       // 写入文件夹
       fs.writeFileSync(uploadDir, f);
-    } finally {
+    } catch (e) {
+      console.log('error', e);
       // 清除临时文件
       ctx.cleanupRequestFiles();
     }
