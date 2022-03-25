@@ -3,6 +3,15 @@
 const Service = require('egg').Service;
 
 class TypeService extends Service {
+  async getTypeInfo(params) {
+    const { app } = this;
+    try {
+      const result = await app.mysql.get('type', params);
+      return result;
+    } catch (error) {
+      return null;
+    }
+  }
   async query(params) {
     const { app } = this;
     const { whereObj, limit, offset } = params;

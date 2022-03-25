@@ -4,19 +4,18 @@ const fs = require('fs');
 const moment = require('moment');
 const mkdirp = require('mkdirp');
 const path = require('path');
-
+const api = require('../utils/utils').api;
 const Controller = require('egg').Controller;
 
 class UploadController extends Controller {
   async upload() {
     const { ctx } = this;
     // 需要前往 config/config.default.js 设置 config.multipart 的 mode 属性为 file
-    console.log('2222', ctx.request.files);
     const file = ctx.request.files[0];
 
     // 声明存放资源的路径
     let uploadDir = '';
-
+    let id = '';
     try {
       // ctx.request.files[0] 表示获取第一个文件，若前端上传多个文件则可以遍历这个数组对象
       const f = fs.readFileSync(file.filepath);
@@ -28,7 +27,7 @@ class UploadController extends Controller {
       await mkdirp(dir); // 不存在就创建目录
       // 返回图片保存的路径
       uploadDir = path.join(dir, date + path.extname(file.filename));
-      await ctx.service.upload.add({ img_url: uploadDir });
+      id = await ctx.service.upload.add({ img_url: api + uploadDir, filename: file.filename });
       // 写入文件夹
       fs.writeFileSync(uploadDir, f);
     } catch (e) {
@@ -41,6 +40,7 @@ class UploadController extends Controller {
       code: 200,
       msg: '上传成功',
       data: uploadDir.replace(/app/g, ''),
+      id,
     };
   }
 }

@@ -35,9 +35,8 @@ module.exports = appInfo => {
   config.multipart = {
     mode: 'file',
     fileSize: 1048576000,
-    whitelist: [ '.txt', '.png', '.jpg' ],
+    whitelist: [ '.txt', '.png' ],
   };
-
   config.cors = {
     origin: '*', // 允许所有跨域访问
     credentials: true, // 允许 Cookie 跨域跨域
@@ -53,7 +52,7 @@ module.exports = appInfo => {
       // 用户名
       user: 'root',
       // 密码
-      password: 'sise', // 初始化密码，没设置的可以不写
+      password: 'root', // 初始化密码，没设置的可以不写
       // 数据库名
       database: 'juejue-cost', // 我们新建的数据库名称
     },
@@ -65,7 +64,7 @@ module.exports = appInfo => {
   };
   config.static = {
     // 静态化访问前缀,如：`http://127.0.0.1:7001/static/images/logo.png`
-    prefix: '/app/public',
+    prefix: '/static',
     dir: path.join(appInfo.baseDir, 'app/public'), // `String` or `Array:[dir1, dir2, ...]` 静态化目录,可以设置多个静态化目录
     dynamic: true, // 如果当前访问的静态资源没有缓存，则缓存静态文件，和`preload`配合使用；
     preload: false,
