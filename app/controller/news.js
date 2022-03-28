@@ -34,8 +34,10 @@ class NewsController extends Controller {
       chunk.type_name = type ? type.name : '';
       chunk.type_id = type ? type.id : '';
       chunk.frontImgList = [];
-      for (const file of chunk.frontImg.split(',')) {
-        chunk.frontImgList.push(await ctx.service.upload.query({ id: file }));
+      if(chunk.frontImg){
+        for (const file of chunk.frontImg.split(',')) {
+          chunk.frontImgList.push(await ctx.service.upload.query({ id: file }));
+        }
       }
 
       delete chunk.user_id;
