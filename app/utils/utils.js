@@ -1,7 +1,7 @@
 'use strict';
 
 const env = 'development';
-const api = env === 'development' ? 'http://localhost:7001/' : 'http://134.175.103.137:18010/';
+const api = env === 'development' ? 'http://localhost:7001/' : '';
 // 分页查询
 function responseFormat(status, data) {
   if (status) {
