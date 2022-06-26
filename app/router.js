@@ -19,5 +19,7 @@ module.exports = app => {
   router.post('/api/news/saveNews', _jwt, controller.news.saveNews); // 获取类型
   router.post('/api/news/delete', _jwt, controller.news.deleteNews); // 获取类型
   router.post('/api/news/publichNews', _jwt, controller.news.publichNews); // 获取类型
-
+  router.get('/api/menus/role/query', controller.menu.query); // 获取类型
+  router.post('/api/menus/role/save', controller.menu.saveMenu); // 获取类型
+  router.post('/api/menus/role/delete', controller.menu.deleteMenu); // 获取类型
 };
