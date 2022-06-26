@@ -33,7 +33,7 @@ class MenuController extends Controller {
   }
   async saveMenu() {
     const { ctx } = this;
-    const { id, pid = 0, title, icon, url, status , menuType , buttonRole,order } = ctx.request.body;
+    const { id, pid = 0, title, icon, url, status , menuType , buttonRole,orders } = ctx.request.body;
     let result = null;
     if (id) {
       //   result = await ctx.service.type.update({ name, id });
@@ -46,7 +46,7 @@ class MenuController extends Controller {
         status,
         menuType,
         buttonRole,
-        order
+        orders
       });
     } else {
       result = await ctx.service.menu.addMenu({
@@ -57,7 +57,7 @@ class MenuController extends Controller {
         status,
         menuType,
         buttonRole,
-        order,
+        orders,
         createtime: moment(new Date()).format("YYYY/MM/DD"),
       });
     }

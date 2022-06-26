@@ -33,7 +33,7 @@ class MenuService extends Service {
 
   async addMenu(params) {
     const { app } = this;
-    const { pid, icon, url, status, title , menuType, buttonRole,order } = params;
+    const { pid, icon, url, status, title , menuType, buttonRole,orders } = params;
     try {
       const result = await app.mysql.insert("menu", {
         pid,
@@ -43,7 +43,7 @@ class MenuService extends Service {
         title,
         menuType,
         buttonRole,
-        order
+        orders
       });
       return result;
     } catch (error) {
@@ -54,7 +54,7 @@ class MenuService extends Service {
 
   async editMenu(params) {
     const { app } = this;
-    const { pid, icon, url, status, title , menuType, buttonRole,order } = params;
+    const { pid, icon, url, status, title , menuType, buttonRole,orders } = params;
     try {
       const result = await app.mysql.update(
         "menu",
@@ -66,7 +66,7 @@ class MenuService extends Service {
           title,
           menuType,
           buttonRole,
-          order
+          orders
         },
         {
           where: {
