@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.1
+-- version 4.8.5
 -- https://www.phpmyadmin.net/
 --
--- 主機： localhost
--- 產生時間： 2022 年 05 月 27 日 08:10
--- 伺服器版本： 5.6.47-log
--- PHP 版本： 7.2.28
+-- 主机： localhost
+-- 生成日期： 2022-07-23 16:40:53
+-- 服务器版本： 5.7.26
+-- PHP 版本： 7.3.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -19,13 +19,15 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- 資料庫： `juejue-cost`
+-- 数据库： `egg`
 --
+CREATE DATABASE IF NOT EXISTS `egg` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+USE `egg`;
 
 -- --------------------------------------------------------
 
 --
--- 資料表結構 `bill`
+-- 表的结构 `bill`
 --
 
 CREATE TABLE `bill` (
@@ -40,7 +42,7 @@ CREATE TABLE `bill` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- 傾印資料表的資料 `bill`
+-- 转存表中的数据 `bill`
 --
 
 INSERT INTO `bill` (`id`, `pay_type`, `amount`, `date`, `type_id`, `type_name`, `user_id`, `remark`) VALUES
@@ -52,7 +54,7 @@ INSERT INTO `bill` (`id`, `pay_type`, `amount`, `date`, `type_id`, `type_name`, 
 -- --------------------------------------------------------
 
 --
--- 資料表結構 `img`
+-- 表的结构 `img`
 --
 
 CREATE TABLE `img` (
@@ -62,7 +64,7 @@ CREATE TABLE `img` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- 傾印資料表的資料 `img`
+-- 转存表中的数据 `img`
 --
 
 INSERT INTO `img` (`id`, `img_url`, `filename`) VALUES
@@ -75,7 +77,41 @@ INSERT INTO `img` (`id`, `img_url`, `filename`) VALUES
 -- --------------------------------------------------------
 
 --
--- 資料表結構 `news`
+-- 表的结构 `menu`
+--
+
+CREATE TABLE `menu` (
+  `id` int(10) NOT NULL,
+  `pid` int(10) DEFAULT '0' COMMENT '父亲id',
+  `title` varchar(255) NOT NULL COMMENT '显示标题',
+  `url` varchar(50) DEFAULT NULL COMMENT 'url',
+  `icon` varchar(50) DEFAULT NULL COMMENT '图标',
+  `createtime` varchar(50) DEFAULT NULL,
+  `status` int(11) DEFAULT '1' COMMENT '状态 开启为 1 ，未开启为 0',
+  `menuType` varchar(1) NOT NULL DEFAULT '1' COMMENT '菜单类型 1. 菜单 2. 按钮',
+  `buttonRole` varchar(50) DEFAULT '' COMMENT '按钮权限',
+  `orders` int(10) DEFAULT '0' COMMENT '排序',
+  `deleteFlag` int(11) DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='菜单表';
+
+--
+-- 转存表中的数据 `menu`
+--
+
+INSERT INTO `menu` (`id`, `pid`, `title`, `url`, `icon`, `createtime`, `status`, `menuType`, `buttonRole`, `orders`, `deleteFlag`) VALUES
+(1, 0, '菜单调价', '/url', '/icon', NULL, 1, '1', 'none', 0, 0),
+(2, 1, '新建菜单', 'ddd', 'dd', NULL, 1, '2', '22', 0, 0),
+(3, 2, '新建菜单', '22', '22', NULL, 1, '1', NULL, 22, 0),
+(4, 0, '菜单1', '/url', 'icon-xxx', NULL, 1, '1', '', 0, 0),
+(5, 4, '子菜单1', '/url', 'icon', NULL, 1, '1', '1', 1, 0),
+(6, 5, '子按钮1-1', NULL, NULL, NULL, 1, '2', NULL, 0, 0),
+(7, 0, '菜单2', '/url', '/icon', NULL, 1, '1', '', 1, 0),
+(8, 7, '新建菜单', '222', '22', NULL, 1, '1', '11', 22, 0);
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `news`
 --
 
 CREATE TABLE `news` (
@@ -92,7 +128,7 @@ CREATE TABLE `news` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- 傾印資料表的資料 `news`
+-- 转存表中的数据 `news`
 --
 
 INSERT INTO `news` (`id`, `title`, `text_type`, `type_id`, `user_id`, `content`, `agree`, `frontImg`, `deleteFlag`, `status`) VALUES
@@ -103,7 +139,7 @@ INSERT INTO `news` (`id`, `title`, `text_type`, `type_id`, `user_id`, `content`,
 -- --------------------------------------------------------
 
 --
--- 資料表結構 `type`
+-- 表的结构 `type`
 --
 
 CREATE TABLE `type` (
@@ -115,7 +151,7 @@ CREATE TABLE `type` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- 傾印資料表的資料 `type`
+-- 转存表中的数据 `type`
 --
 
 INSERT INTO `type` (`id`, `name`, `type`, `user_id`, `deleteFlag`) VALUES
@@ -126,7 +162,7 @@ INSERT INTO `type` (`id`, `name`, `type`, `user_id`, `deleteFlag`) VALUES
 -- --------------------------------------------------------
 
 --
--- 資料表結構 `user`
+-- 表的结构 `user`
 --
 
 CREATE TABLE `user` (
@@ -141,76 +177,106 @@ CREATE TABLE `user` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- 傾印資料表的資料 `user`
+-- 转存表中的数据 `user`
 --
 
 INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `signature`, `avatar`, `work`, `ctime`) VALUES
 (1, 'zhengyongkai', '123456', '郑永楷', '111', 'http://s.yezgea02.com/1615973940679/WeChat77d6d2ac093e247c361f0b8a7aeb6c2a.png', '数据分析师', '1644655828615');
 
+-- --------------------------------------------------------
+
 --
--- 已傾印資料表的索引
+-- 表的结构 `user_role`
+--
+
+CREATE TABLE `user_role` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `menu_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户菜单表';
+
+--
+-- 转储表的索引
 --
 
 --
--- 資料表索引 `bill`
+-- 表的索引 `bill`
 --
 ALTER TABLE `bill`
   ADD PRIMARY KEY (`id`);
 
 --
--- 資料表索引 `img`
+-- 表的索引 `img`
 --
 ALTER TABLE `img`
   ADD PRIMARY KEY (`id`);
 
 --
--- 資料表索引 `news`
+-- 表的索引 `menu`
+--
+ALTER TABLE `menu`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- 表的索引 `news`
 --
 ALTER TABLE `news`
   ADD PRIMARY KEY (`id`);
 
 --
--- 資料表索引 `type`
+-- 表的索引 `type`
 --
 ALTER TABLE `type`
   ADD PRIMARY KEY (`id`);
 
 --
--- 資料表索引 `user`
+-- 表的索引 `user`
 --
 ALTER TABLE `user`
   ADD PRIMARY KEY (`id`);
 
 --
--- 在傾印的資料表使用自動遞增(AUTO_INCREMENT)
+-- 表的索引 `user_role`
+--
+ALTER TABLE `user_role`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- 在导出的表使用AUTO_INCREMENT
 --
 
 --
--- 使用資料表自動遞增(AUTO_INCREMENT) `bill`
+-- 使用表AUTO_INCREMENT `bill`
 --
 ALTER TABLE `bill`
   MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- 使用資料表自動遞增(AUTO_INCREMENT) `img`
+-- 使用表AUTO_INCREMENT `img`
 --
 ALTER TABLE `img`
   MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=105;
 
 --
--- 使用資料表自動遞增(AUTO_INCREMENT) `news`
+-- 使用表AUTO_INCREMENT `menu`
+--
+ALTER TABLE `menu`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- 使用表AUTO_INCREMENT `news`
 --
 ALTER TABLE `news`
   MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
--- 使用資料表自動遞增(AUTO_INCREMENT) `type`
+-- 使用表AUTO_INCREMENT `type`
 --
 ALTER TABLE `type`
   MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
--- 使用資料表自動遞增(AUTO_INCREMENT) `user`
+-- 使用表AUTO_INCREMENT `user`
 --
 ALTER TABLE `user`
   MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
