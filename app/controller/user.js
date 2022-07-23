@@ -99,6 +99,10 @@ class UserController extends Controller {
     const decode = await app.jwt.verify(token, app.config.jwt.secret);
     // 通过 getUserByName 方法，以用户名 decode.username 为参数，从数据库获取到该用户名下的相关信息
     const userInfo = await ctx.service.user.getUserByName(decode.username);
+    // 获取菜单列表
+    const menu = await ctx.service.menu.query({
+      deleteFlag:1,
+    });
     // userInfo 中应该有密码信息，所以我们指定下面四项返回给客户端
     const defaultAvatar =
       'http://s.yezgea02.com/1615973940679/WeChat77d6d2ac093e247c361f0b8a7aeb6c2a.png';
@@ -111,6 +115,7 @@ class UserController extends Controller {
         signature: userInfo.signature || '',
         avatar: userInfo.avatar || defaultAvatar,
         nickname: userInfo.nickname || '不知名先生',
+        menu
       },
     };
   }
