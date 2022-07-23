@@ -55,11 +55,15 @@ class TypeService extends Service {
   async delete(id) {
     const { app } = this;
     try {
-      const result = await app.mysql.update('type', { deleteFlag: 0 }, {
-        where: {
-          id,
-        },
-      });
+      const result = await app.mysql.update(
+        'type',
+        { deleteFlag: 0 },
+        {
+          where: {
+            id,
+          },
+        }
+      );
       return result;
     } catch (error) {
       console.log(error);
