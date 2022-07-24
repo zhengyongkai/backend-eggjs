@@ -24,8 +24,7 @@ class TypeService extends Service {
       const total = await app.mysql.count('type', whereObj);
       return { list, total };
     } catch (error) {
-      console.log(error);
-      return null;
+      throw Error(error);
     }
   }
   async add(params) {
@@ -34,7 +33,6 @@ class TypeService extends Service {
       const result = await app.mysql.insert('type', params);
       return result;
     } catch (error) {
-      console.log(error);
       return null;
     }
   }
@@ -48,7 +46,6 @@ class TypeService extends Service {
       });
       return result;
     } catch (error) {
-      console.log(error);
       return null;
     }
   }
@@ -66,7 +63,6 @@ class TypeService extends Service {
       );
       return result;
     } catch (error) {
-      console.log(error);
       return null;
     }
   }

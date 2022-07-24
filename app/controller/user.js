@@ -56,8 +56,9 @@ class UserController extends Controller {
     const userInfo = await ctx.service.user.getUserByName(username);
     // 没找到说明没有该用户
     if (!userInfo || !userInfo.id) {
+      ctx.status = 403;
       ctx.body = {
-        code: 500,
+        code: 403,
         msg: '账号不存在',
         success: false,
         data: null,
@@ -66,8 +67,9 @@ class UserController extends Controller {
     }
     // 找到用户，并且判断输入密码与数据库中用户密码。
     if (userInfo && password !== userInfo.password) {
+      ctx.status = 403;
       ctx.body = {
-        code: 500,
+        code: 403,
         msg: '账号密码错误',
         success: false,
         data: null,
@@ -101,7 +103,7 @@ class UserController extends Controller {
     const userInfo = await ctx.service.user.getUserByName(decode.username);
     // 获取菜单列表
     const menu = await ctx.service.menu.query({
-      deleteFlag:1,
+      deleteFlag: 1,
     });
     // userInfo 中应该有密码信息，所以我们指定下面四项返回给客户端
     const defaultAvatar =
@@ -115,7 +117,7 @@ class UserController extends Controller {
         signature: userInfo.signature || '',
         avatar: userInfo.avatar || defaultAvatar,
         nickname: userInfo.nickname || '不知名先生',
-        menu
+        menu,
       },
     };
   }

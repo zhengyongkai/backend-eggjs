@@ -20,18 +20,22 @@ class TypeController extends Controller {
           break;
       }
     }
-    const { total, list } = await ctx.service.type.query({
-      whereObj,
-      limit: limit ? limit : null,
-      offset: page ? (page - 1) * limit : null,
-    });
-    ctx.body = responseFormat(true, {
-      limit,
-      page,
-      total,
-      pages: Math.ceil(total / limit),
-      list,
-    });
+    try {
+      const { total, list } = await ctx.service.type.query({
+        whereObj,
+        limit: limit ? limit : null,
+        offset: page ? (page - 1) * limit : null,
+      });
+      ctx.body = responseFormat(true, {
+        limit,
+        page,
+        total,
+        pages: Math.ceil(total / limit),
+        list,
+      });
+    } catch ({ message }) {
+      ctx.body = responseFormat(false, message);
+    }
   }
   async saveType() {
     const { ctx } = this;
@@ -45,7 +49,7 @@ class TypeController extends Controller {
     if (result) {
       ctx.body = responseHandleFormat(true);
     } else {
-      responseHandleFormat(false);
+      ctx.body = responseHandleFormat(false);
     }
   }
   async deleteType() {
@@ -55,7 +59,7 @@ class TypeController extends Controller {
     if (result) {
       ctx.body = responseHandleFormat(true);
     } else {
-      responseHandleFormat(false);
+      ctx.body = responseHandleFormat(false);
     }
   }
 }

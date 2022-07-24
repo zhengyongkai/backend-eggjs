@@ -5,7 +5,7 @@ const path = require('path');
 /**
  * @param {Egg.EggAppInfo} appInfo app info
  */
-module.exports = appInfo => {
+module.exports = (appInfo) => {
   /**
    * built-in config
    * @type {Egg.EggAppConfig}
@@ -22,7 +22,7 @@ module.exports = appInfo => {
   config.keys = appInfo.name + '_1644650028585_4639';
 
   // add your middleware config here
-  config.middleware = [];
+  config.middleware = ['errorHandler'];
 
   // add your user config here
   const userConfig = {
@@ -35,7 +35,7 @@ module.exports = appInfo => {
   config.multipart = {
     mode: 'file',
     fileSize: 1048576000,
-    whitelist: [ '.txt', '.png', '.jpg' ],
+    whitelist: ['.txt', '.png', '.jpg'],
   };
 
   config.cors = {
@@ -61,7 +61,6 @@ module.exports = appInfo => {
     app: true,
     // 是否加载到 agent 上，默认关闭
     agent: false,
-
   };
   config.static = {
     // 静态化访问前缀,如：`http://127.0.0.1:7001/static/images/logo.png`

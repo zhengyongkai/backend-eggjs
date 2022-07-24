@@ -15,8 +15,7 @@ class newsService extends Service {
       const total = await app.mysql.count('news', whereObj);
       return { list, total };
     } catch (error) {
-      console.log(error);
-      return null;
+      throw Error(error);
     }
   }
   async add(params) {
@@ -25,7 +24,6 @@ class newsService extends Service {
       const result = await app.mysql.insert('news', params);
       return result;
     } catch (error) {
-      console.log(error);
       return null;
     }
   }
@@ -39,7 +37,6 @@ class newsService extends Service {
       });
       return result;
     } catch (error) {
-      console.log(error);
       return null;
     }
   }
@@ -57,7 +54,6 @@ class newsService extends Service {
       );
       return result;
     } catch (error) {
-      console.log(error);
       return null;
     }
   }

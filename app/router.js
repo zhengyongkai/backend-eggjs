@@ -3,7 +3,7 @@
 /**
  * @param {Egg.Application} app - egg application
  */
-module.exports = app => {
+module.exports = (app) => {
   const { router, controller, middleware } = app;
   const _jwt = middleware.jwtErr(app.config.jwt.secret); // 传入加密字符串
   router.get('/', controller.home.index);
@@ -19,7 +19,7 @@ module.exports = app => {
   router.post('/api/news/saveNews', _jwt, controller.news.saveNews); // 获取类型
   router.post('/api/news/delete', _jwt, controller.news.deleteNews); // 获取类型
   router.post('/api/news/publichNews', _jwt, controller.news.publichNews); // 获取类型
-  router.get('/api/menus/role/query', controller.menu.query); // 获取类型
-  router.post('/api/menus/role/save', controller.menu.saveMenu); // 获取类型
-  router.post('/api/menus/role/delete', controller.menu.deleteMenu); // 获取类型
+  router.get('/api/menus/role/query', _jwt, controller.menu.query); // 获取类型
+  router.post('/api/menus/role/save', _jwt, controller.menu.saveMenu); // 获取类型
+  router.post('/api/menus/role/delete', _jwt, controller.menu.deleteMenu); // 获取类型
 };

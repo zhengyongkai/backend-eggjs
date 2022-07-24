@@ -23,47 +23,67 @@ class NewsController extends Controller {
           break;
       }
     }
-    const { total, list } = await ctx.service.news.query({
-      whereObj,
-      limit: limit ? limit : null,
-      offset: page ? (page - 1) * limit : null,
-    });
-    for (const chunk of list) {
-      chunk.user = await ctx.service.user.getUserInfo({ id: chunk.user_id });
-      const type = await ctx.service.type.getTypeInfo({ id: chunk.type_id });
-      chunk.type_name = type ? type.name : '';
-      chunk.type_id = type ? type.id : '';
-      chunk.frontImgList = [];
-      if(chunk.frontImg){
-        for (const file of chunk.frontImg.split(',')) {
-          chunk.frontImgList.push(await ctx.service.upload.query({ id: file }));
+    try {
+      const { total, list } = await ctx.service.news.query({
+        whereObj,
+        limit: limit ? limit : null,
+        offset: page ? (page - 1) * limit : null,
+      });
+      for (const chunk of list) {
+        chunk.user = await ctx.service.user.getUserInfo({ id: chunk.user_id });
+        const type = await ctx.service.type.getTypeInfo({ id: chunk.type_id });
+        chunk.type_name = type ? type.name : '';
+        chunk.type_id = type ? type.id : '';
+        chunk.frontImgList = [];
+        if (chunk.frontImg) {
+          for (const file of chunk.frontImg.split(',')) {
+            chunk.frontImgList.push(
+              await ctx.service.upload.query({ id: file })
+            );
+          }
         }
+        delete chunk.user_id;
       }
-
-      delete chunk.user_id;
+      ctx.body = responseFormat(true, {
+        limit,
+        page,
+        total,
+        pages: Math.ceil(total / limit),
+        list,
+      });
+    } catch ({ message }) {
+      ctx.body = responseFormat(false, message);
     }
-
-    ctx.body = responseFormat(true, {
-      limit,
-      page,
-      total,
-      pages: Math.ceil(total / limit),
-      list,
-    });
   }
   async saveNews() {
     const { ctx } = this;
-    const { id, title, text_type, type_id, content, user_id, frontImg } = ctx.request.body;
+    const { id, title, text_type, type_id, content, user_id, frontImg } =
+      ctx.request.body;
     let result = null;
     if (id) {
-      result = await ctx.service.news.update({ id, title, text_type, type_id, content, user_id, frontImg });
+      result = await ctx.service.news.update({
+        id,
+        title,
+        text_type,
+        type_id,
+        content,
+        user_id,
+        frontImg,
+      });
     } else {
-      result = await ctx.service.news.add({ title, text_type, type_id, content, user_id, frontImg });
+      result = await ctx.service.news.add({
+        title,
+        text_type,
+        type_id,
+        content,
+        user_id,
+        frontImg,
+      });
     }
     if (result) {
       ctx.body = responseHandleFormat(true);
     } else {
-      responseHandleFormat(false);
+      ctx.body = responseHandleFormat(false);
     }
   }
   async deleteNews() {
@@ -73,7 +93,7 @@ class NewsController extends Controller {
     if (result) {
       ctx.body = responseHandleFormat(true);
     } else {
-      responseHandleFormat(false);
+      ctx.body = responseHandleFormat(false);
     }
   }
   async publichNews() {
@@ -86,7 +106,7 @@ class NewsController extends Controller {
     if (result) {
       ctx.body = responseHandleFormat(true);
     } else {
-      responseHandleFormat(false);
+      ctx.body = responseHandleFormat(false);
     }
   }
 }

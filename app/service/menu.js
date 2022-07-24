@@ -26,7 +26,7 @@ class MenuService extends Service {
       const total = await app.mysql.count('menu', whereObj);
       return { list, total };
     } catch (error) {
-      return null;
+      throw Error(error);
     }
   }
 
@@ -47,7 +47,6 @@ class MenuService extends Service {
       });
       return result;
     } catch (error) {
-      console.log(error);
       return null;
     }
   }
@@ -77,7 +76,6 @@ class MenuService extends Service {
       );
       return result;
     } catch (error) {
-      console.log(error);
       return null;
     }
   }
@@ -96,7 +94,6 @@ class MenuService extends Service {
       );
       return result;
     } catch (error) {
-      console.log(error);
       return null;
     }
   }

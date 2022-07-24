@@ -9,7 +9,6 @@ class UploadService extends Service {
       const result = await app.mysql.get('img', params);
       return result;
     } catch (error) {
-      console.log(error);
       return null;
     }
   }
@@ -20,11 +19,9 @@ class UploadService extends Service {
 
       return result.insertId;
     } catch (error) {
-
       return null;
     }
   }
-
 }
 
 module.exports = UploadService;
