@@ -1,8 +1,7 @@
 module.exports = () => {
   return async function errorHandler(ctx, next) {
     await next();
-    console.log(ctx);
-    if (ctx.body.success === false) {
+    if (ctx.body && ctx.body.success === false) {
       let msg = ctx.body.msg;
       ctx.status = 500;
       ctx.body = {
