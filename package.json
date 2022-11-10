@@ -11,9 +11,8 @@
     "egg-cors": "^2.2.3",
     "egg-jwt": "^3.1.7",
     "egg-mysql": "^3.1.0",
-    "egg-redis": "^2.4.0",
     "egg-scripts": "^2.11.0",
-    "egg-socket.io": "^4.1.6",
+    "egg-websocket-plugin": "^1.0.1",
     "mkdirp": "^1.0.4",
     "moment": "^2.29.1",
     "qs": "^6.10.3"
@@ -34,6 +33,7 @@
     "start": "egg-scripts start --daemon --title=egg-server-backend",
     "stop": "egg-scripts stop --title=egg-server-backend",
     "dev": "egg-bin dev",
+    "devs":"npm run dev",
     "debug": "egg-bin debug",
     "test": "npm run lint -- --fix && npm run test-local",
     "test-local": "egg-bin test",

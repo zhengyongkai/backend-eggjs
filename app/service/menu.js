@@ -18,6 +18,7 @@ class MenuService extends Service {
   async query(params) {
     const { app } = this;
     const { whereObj = {} } = params;
+    console.log(whereObj);
     try {
       const list = await app.mysql.select('menu', {
         where: whereObj,
