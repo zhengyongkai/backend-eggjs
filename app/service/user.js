@@ -4,6 +4,21 @@
 const Service = require('egg').Service;
 
 class UserService extends Service {
+  async getUserList(params) {
+    const { app } = this;
+    const { whereObj, limit, offset } = params;
+    try {
+      const list = await app.mysql.select('user', {
+        where: whereObj,
+        limit,
+        offset,
+      });
+      const total = await app.mysql.count('user', whereObj);
+      return { list, total };
+    } catch (error) {
+      throw Error(error);
+    }
+  }
   // 通过用户名获取用户信息
   async getUserInfo(params) {
     const { app } = this;

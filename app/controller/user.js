@@ -2,7 +2,7 @@
 'use strict';
 
 const Controller = require('egg').Controller;
-
+const { responseFormat } = require('../utils/utils');
 class UserController extends Controller {
   async register() {
     const { ctx } = this;
@@ -161,6 +161,39 @@ class UserController extends Controller {
           error,
         },
       };
+    }
+  }
+
+  async getUserList() {
+    const { ctx } = this;
+    const { page = 1, ...filter } = ctx.query;
+    const limit = parseInt(ctx.query.limit) || 10;
+    // 假删除
+    const whereObj = { deleteFlag: 1 };
+    for (const x in filter) {
+      switch (x) {
+        case 'username':
+          whereObj.username = filter[x];
+          break;
+        default:
+          break;
+      }
+    }
+    try {
+      const { total, list } = await ctx.service.user.getUserList({
+        whereObj,
+        limit: limit ? limit : null,
+        offset: page ? (page - 1) * limit : null,
+      });
+      ctx.body = responseFormat(true, {
+        limit,
+        page,
+        total,
+        pages: Math.ceil(total / limit),
+        list,
+      });
+    } catch ({ message }) {
+      ctx.body = responseFormat(false, message);
     }
   }
 }

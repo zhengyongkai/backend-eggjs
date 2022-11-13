@@ -3,7 +3,11 @@ module.exports = () => {
     await next();
     if (ctx.body && ctx.body.success === false) {
       let msg = ctx.body.msg;
-      ctx.status = 500;
+      if(ctx.status === 401){
+        ctx.status = 401;
+      }else{
+        ctx.status = 500
+      }
       ctx.body = {
         ...ctx.body,
         msg: '服务器错误',
