@@ -18,12 +18,16 @@ module.exports = {
     enable: true,
     package: 'egg-cors',
   },
-  io: {
+  // io: {
+  //   enable: true,
+  //   package: 'egg-socket.io',
+  // },
+  // redis: {
+  //   enable: true,
+  //   package: 'egg-redis',
+  // },
+  socket: {
     enable: true,
-    package: 'egg-socket.io',
-  },
-  redis: {
-    enable: true,
-    package: 'egg-redis',
+    package: 'egg-websocket-plugin',
   },
 };

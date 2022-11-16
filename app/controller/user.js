@@ -2,7 +2,7 @@
 'use strict';
 
 const Controller = require('egg').Controller;
-
+const { responseFormat } = require('../utils/utils');
 class UserController extends Controller {
   async register() {
     const { ctx } = this;
@@ -56,9 +56,9 @@ class UserController extends Controller {
     const userInfo = await ctx.service.user.getUserByName(username);
     // 没找到说明没有该用户
     if (!userInfo || !userInfo.id) {
-      ctx.status = 403;
+      ctx.status = 401;
       ctx.body = {
-        code: 403,
+        code: 401,
         msg: '账号不存在',
         success: false,
         data: null,
@@ -67,9 +67,9 @@ class UserController extends Controller {
     }
     // 找到用户，并且判断输入密码与数据库中用户密码。
     if (userInfo && password !== userInfo.password) {
-      ctx.status = 403;
+      ctx.status = 401;
       ctx.body = {
-        code: 403,
+        code: 401,
         msg: '账号密码错误',
         success: false,
         data: null,
@@ -161,6 +161,39 @@ class UserController extends Controller {
           error,
         },
       };
+    }
+  }
+
+  async getUserList() {
+    const { ctx } = this;
+    const { page = 1, ...filter } = ctx.query;
+    const limit = parseInt(ctx.query.limit) || 10;
+    // 假删除
+    const whereObj = { deleteFlag: 1 };
+    for (const x in filter) {
+      switch (x) {
+        case 'username':
+          whereObj.username = filter[x];
+          break;
+        default:
+          break;
+      }
+    }
+    try {
+      const { total, list } = await ctx.service.user.getUserList({
+        whereObj,
+        limit: limit ? limit : null,
+        offset: page ? (page - 1) * limit : null,
+      });
+      ctx.body = responseFormat(true, {
+        limit,
+        page,
+        total,
+        pages: Math.ceil(total / limit),
+        list,
+      });
+    } catch ({ message }) {
+      ctx.body = responseFormat(false, message);
     }
   }
 }

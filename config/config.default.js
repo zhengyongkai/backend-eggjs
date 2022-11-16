@@ -71,22 +71,22 @@ module.exports = (appInfo) => {
     maxAge: 31536000, // in prod env, 0 in other envs
     buffer: true, // in prod env, false in other envs
   };
-  config.redis = {
-    client: {
-      port: 6379, // Redis port
-      host: '134.175.103.137', // Redis host
-      password: '',
-      db: 0,
-    },
-  };
-  config.io = {
-    namespace: {
-      '/': {
-        connectionMiddleware: ['connection'],
-        packetMiddleware: [],
-      },
-    },
-  };
+  // config.redis = {
+  //   client: {
+  //     port: 6379, // Redis port
+  //     host: '134.175.103.137', // Redis host
+  //     password: '',
+  //     db: 0,
+  //   },
+  // };
+  // config.io = {
+  //   namespace: {
+  //     '/': {
+  //       connectionMiddleware: ['connection'],
+  //       packetMiddleware: [],
+  //     },
+  //   },
+  // };
 
   return {
     ...config,
