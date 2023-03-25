@@ -1,10 +1,13 @@
 'use strict';
 
+
 const fs = require('fs');
+const { responseFormat } = require('../utils/utils');
 const moment = require('moment');
 const mkdirp = require('mkdirp');
 const path = require('path');
-const api = require('../utils/utils').api;
+const toArray = require('stream-to-array');
+const sendToWormhole = require('stream-wormhole');
 const Controller = require('egg').Controller;
 
 class UploadController extends Controller {
@@ -12,7 +15,7 @@ class UploadController extends Controller {
     const { ctx } = this;
     // 需要前往 config/config.default.js 设置 config.multipart 的 mode 属性为 file
     const file = ctx.request.files[0];
-
+    // console.log(file)
     // 声明存放资源的路径
     let uploadDir = '';
     let id = '';
@@ -27,11 +30,9 @@ class UploadController extends Controller {
       await mkdirp(dir); // 不存在就创建目录
       // 返回图片保存的路径
       uploadDir = path.join(dir, date + path.extname(file.filename));
-      id = await ctx.service.upload.add({ img_url: api + uploadDir, filename: file.filename });
       // 写入文件夹
       fs.writeFileSync(uploadDir, f);
     } catch (e) {
-      console.log('error', e);
       // 清除临时文件
       ctx.cleanupRequestFiles();
     }
@@ -41,6 +42,41 @@ class UploadController extends Controller {
       msg: '上传成功',
       data: uploadDir.replace(/app/g, ''),
       id,
+    };
+  }
+
+  // async play(){
+  //   fs.createReadStream();
+
+  // }
+
+  async uploadStream() {
+    const stream = await this.ctx.getFileStream();
+    const filename = stream.filename;
+    const day = moment(new Date()).format('YYYYMMDD');
+    const dir = path.join(this.config.uploadDir, day);
+    
+    let buf;
+    let uploadDir = '';
+    try {
+      await mkdirp(dir); 
+      uploadDir = path.join(dir, filename);
+      const streams = fs.createWriteStream(uploadDir, {
+        flags: 'a',
+      });
+      const parts = await toArray(stream);
+      buf = Buffer.concat(parts);
+      streams.write(buf);
+    } catch ({ message }) {
+      await sendToWormhole(stream);
+      // ctx.cleanupRequestFiles();
+      this.ctx.body = responseFormat(false, message);
+      // throw e;
+    }
+    this.ctx.body = {
+      code: 200,
+      msg: '上传成功',
+      data: uploadDir.replace(/app/g, ''),
     };
   }
 }

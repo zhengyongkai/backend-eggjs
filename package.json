@@ -15,7 +15,8 @@
     "egg-websocket-plugin": "^1.0.1",
     "mkdirp": "^1.0.4",
     "moment": "^2.29.1",
-    "qs": "^6.10.3"
+    "qs": "^6.10.3",
+    "stream-to-array": "^2.3.0"
   },
   "devDependencies": {
     "autod": "^3.0.1",
@@ -33,7 +34,7 @@
     "start": "egg-scripts start --daemon --title=egg-server-backend",
     "stop": "egg-scripts stop --title=egg-server-backend",
     "dev": "egg-bin dev",
-    "devs":"npm run dev",
+    "devs": "npm run dev",
     "debug": "egg-bin debug",
     "test": "npm run lint -- --fix && npm run test-local",
     "test-local": "egg-bin test",

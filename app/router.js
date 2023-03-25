@@ -14,6 +14,7 @@ module.exports = (app) => {
   router.post('/api/user/edit_userinfo', _jwt, controller.user.editUserInfo); // 修改用户个性签名
   // router.get('/api/user/list', _jwt, controller.user.getUserList);
   router.post('/api/upload/upload', _jwt, controller.upload.upload); // 上传图片
+  router.post('/api/upload/uploadStream', controller.upload.uploadStream); // 上传图片
   router.get('/api/type/list', _jwt, controller.type.query); // 获取类别列表
   router.post('/api/type/save', _jwt, controller.type.saveType); // 保存类别
   router.post('/api/type/delete', _jwt, controller.type.deleteType); //删除类别

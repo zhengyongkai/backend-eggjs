@@ -11,6 +11,7 @@ class ChatController extends Controller {
   async index() {
     const { ctx, app } = this;
     const { params } = ctx;
+    console.log('join', params, params.token);
     // 服務端
     app.ws.clientsSet.set(params.token, ctx.websocket);
     this.onlineMessage();
@@ -48,7 +49,6 @@ class ChatController extends Controller {
       // if(ctx.websocket.id === formid){
       //   return
       // }
-      console.log(formid)
       user.send(
         JSON.stringify({
           type: "OnGroup",
@@ -77,7 +77,6 @@ class ChatController extends Controller {
       );
     } else {
       if (receviewId === "-1") {
-        console.log("good");
         ctx.websocket.send(
           JSON.stringify({
             type: "OnMessage",
@@ -90,6 +89,7 @@ class ChatController extends Controller {
           })
         );
       } else {
+        console.log('good')
         user.send(
           JSON.stringify({
             type: "OnMessage",
@@ -115,6 +115,7 @@ class ChatController extends Controller {
       this.onMessageGroup(app.ws.clientsSet, receviewId, formid, msg);
     }
     if (message.type === "onPerson") {
+      console.log(typeof formid)
       this.onMessagePerson(receviewId, formid, msg);
     }
   }

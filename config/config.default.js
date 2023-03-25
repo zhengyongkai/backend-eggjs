@@ -33,9 +33,10 @@ module.exports = (appInfo) => {
   };
   config.uploadDir = 'app/public/img';
   config.multipart = {
-    mode: 'file',
+    mode: 'stream',
+    fileModeMatch: /(\/upload)$/,
     fileSize: 1048576000,
-    whitelist: ['.txt', '.png', '.jpg'],
+    whitelist: ['.txt', '.png', '.jpg', '.mp4'],
   };
 
   config.cors = {
