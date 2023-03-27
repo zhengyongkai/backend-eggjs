@@ -48,13 +48,13 @@ module.exports = (appInfo) => {
     // 单数据库信息配置
     client: {
       // host
-      host: 'localhost',
+      host: '134.175.103.137',
       // 端口号
       port: '3306',
       // 用户名
       user: 'root',
       // 密码
-      password: '123456', // 初始化密码，没设置的可以不写
+      password: 'root', // 初始化密码，没设置的可以不写
       // 数据库名
       database: 'egg', // 我们新建的数据库名称
     },
@@ -72,14 +72,7 @@ module.exports = (appInfo) => {
     maxAge: 31536000, // in prod env, 0 in other envs
     buffer: true, // in prod env, false in other envs
   };
-  // config.redis = {
-  //   client: {
-  //     port: 6379, // Redis port
-  //     host: '134.175.103.137', // Redis host
-  //     password: '',
-  //     db: 0,
-  //   },
-  // };
+
   // config.io = {
   //   namespace: {
   //     '/': {

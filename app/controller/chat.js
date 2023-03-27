@@ -1,12 +1,19 @@
-"use strict";
+'use strict';
 
-const Controller = require("egg").Controller;
+const Controller = require('egg').Controller;
+
+const { Configuration, OpenAIApi } = require('openai');
+
+const configuration = new Configuration({
+  apiKey: '',
+});
+const openai = new OpenAIApi(configuration);
 
 class ChatController extends Controller {
   chat = {
-    你好: "你好呀" + "🙂",
+    你好: '你好呀' + '🙂',
     有什么好吃的:
-      "请看看以下菜单:<br><ul><li><a>红烧鸡腿饭</a></li><li><a>白切鸡</a></li><li><a>烧鹅</a></li></ul>",
+      '请看看以下菜单:<br><ul><li><a>红烧鸡腿饭</a></li><li><a>白切鸡</a></li><li><a>烧鹅</a></li></ul>',
   };
   async index() {
     const { ctx, app } = this;
@@ -18,10 +25,10 @@ class ChatController extends Controller {
     // 客戶端
     ctx.websocket.id = params.token;
     ctx.websocket
-      .on("message", (data) => {
+      .on('message', (data) => {
         this.onMessageFormat(params.token, data);
       })
-      .on("close", (code, reason) => {
+      .on('close', (code, reason) => {
         app.ws.clientsSet.delete(params.token);
         this.onlineMessage();
       });
@@ -29,14 +36,14 @@ class ChatController extends Controller {
   async onlineMessage() {
     const { app } = this;
     this.onMessageGroup(app.ws.clientsSet, {
-      type: "OnLine",
+      type: 'OnLine',
       msg: Array.from(app.ws.clientsSet.keys()),
     });
 
     Array.from(app.ws.clientsSet.values()).forEach((user) => {
       user.send(
         JSON.stringify({
-          type: "OnLine",
+          type: 'OnLine',
           msg: Array.from(app.ws.clientsSet.keys()),
         })
       );
@@ -51,7 +58,7 @@ class ChatController extends Controller {
       // }
       user.send(
         JSON.stringify({
-          type: "OnGroup",
+          type: 'OnGroup',
           msg: {
             formid: formid,
             receviewId: receviewId,
@@ -67,32 +74,37 @@ class ChatController extends Controller {
     if (!user) {
       ctx.websocket.send(
         JSON.stringify({
-          type: "OnUndeUser",
+          type: 'OnUndeUser',
           msg: {
-            formid: "-1",
+            formid: '-1',
             receviewId: ctx.websocket.id,
-            msg: "用户不存在",
+            msg: '用户不存在',
           },
         })
       );
     } else {
-      if (receviewId === "-1") {
+      if (receviewId === '-1') {
+        const messages = [{ role: 'user', content: msg }];
+        const completion = await openai.createChatCompletion({
+          model: 'gpt-3.5-turbo',
+          messages: messages,
+        });
+        const completion_text = completion.data.choices[0].message.content;
         ctx.websocket.send(
           JSON.stringify({
-            type: "OnMessage",
+            type: 'OnMessage',
             msg: {
-              formid: "-1",
+              formid: '-1',
               receviewId: ctx.websocket.id,
-              msg:
-                this.chat[msg] || "小冰暂时还没领会你的回答，请回复点别的吧🙂",
+              msg: completion_text,
             },
           })
         );
       } else {
-        console.log('good')
+        console.log('good');
         user.send(
           JSON.stringify({
-            type: "OnMessage",
+            type: 'OnMessage',
             msg: {
               formid: formid,
               receviewId: receviewId,
@@ -103,19 +115,20 @@ class ChatController extends Controller {
       }
     }
   }
+
   async onMessageFormat(token, data) {
     // 判断是否是 ai 聊天 群聊 或者单聊
     const { ctx, app } = this;
     let message = JSON.parse(data);
     let { msg, receviewId, formid } = message;
-    if (message.type === "OnLine") {
+    if (message.type === 'OnLine') {
       ctx.websocket.send(this.chat[msg]);
     }
-    if (message.type === "onGroup") {
+    if (message.type === 'onGroup') {
       this.onMessageGroup(app.ws.clientsSet, receviewId, formid, msg);
     }
-    if (message.type === "onPerson") {
-      console.log(typeof formid)
+    if (message.type === 'onPerson') {
+      console.log(typeof formid);
       this.onMessagePerson(receviewId, formid, msg);
     }
   }

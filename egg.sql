@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主机： localhost
--- 生成日期： 2022-07-23 16:40:53
+-- 生成日期： 2023-03-27 21:56:15
 -- 服务器版本： 5.7.26
 -- PHP 版本： 7.3.4
 
@@ -21,8 +21,6 @@ SET time_zone = "+00:00";
 --
 -- 数据库： `egg`
 --
-CREATE DATABASE IF NOT EXISTS `egg` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
-USE `egg`;
 
 -- --------------------------------------------------------
 
@@ -60,19 +58,21 @@ INSERT INTO `bill` (`id`, `pay_type`, `amount`, `date`, `type_id`, `type_name`, 
 CREATE TABLE `img` (
   `id` int(10) NOT NULL,
   `img_url` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `filename` varchar(255) COLLATE utf8_unicode_ci NOT NULL
+  `filename` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `chunk` int(11) NOT NULL COMMENT '碎片索引',
+  `chunks` int(11) NOT NULL COMMENT '全部碎片'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- 转存表中的数据 `img`
 --
 
-INSERT INTO `img` (`id`, `img_url`, `filename`) VALUES
-(100, 'http://134.175.103.137:18010/app/public/img/20220325/1648217713796.jpg', '3.jpg'),
-(101, 'http://134.175.103.137:7001/app/public/img/20220325/1648217983174.jpg', '47.jpg'),
-(102, 'http://134.175.103.137:7001/app/public/img/20220325/1648219139026.jpg', '47.jpg'),
-(103, 'http://134.175.103.137:7001/app/public/img/20220326/1648230198008.jpg', 'u=1487384194,1439605093&fm=253&fmt=auto&app=138&f=JPEG.jpg'),
-(104, 'https://pic1.zhimg.com/50/v2-2d3d27c045fbdc34596937e82786e56a_720w.jpg?source=1940ef5c', 'v2-2d3d27c045fbdc34596937e82786e56a_720w.jpg');
+INSERT INTO `img` (`id`, `img_url`, `filename`, `chunk`, `chunks`) VALUES
+(100, 'http://134.175.103.137:18010/app/public/img/20220325/1648217713796.jpg', '3.jpg', 0, 0),
+(101, 'http://134.175.103.137:7001/app/public/img/20220325/1648217983174.jpg', '47.jpg', 0, 0),
+(102, 'http://134.175.103.137:7001/app/public/img/20220325/1648219139026.jpg', '47.jpg', 0, 0),
+(103, 'http://134.175.103.137:7001/app/public/img/20220326/1648230198008.jpg', 'u=1487384194,1439605093&fm=253&fmt=auto&app=138&f=JPEG.jpg', 0, 0),
+(104, 'https://pic1.zhimg.com/50/v2-2d3d27c045fbdc34596937e82786e56a_720w.jpg?source=1940ef5c', 'v2-2d3d27c045fbdc34596937e82786e56a_720w.jpg', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -106,7 +106,12 @@ INSERT INTO `menu` (`id`, `pid`, `title`, `url`, `icon`, `createtime`, `status`,
 (5, 4, '子菜单1', '/url', 'icon', NULL, 1, '1', '1', 1, 0),
 (6, 5, '子按钮1-1', NULL, NULL, NULL, 1, '2', NULL, 0, 0),
 (7, 0, '菜单2', '/url', '/icon', NULL, 1, '1', '', 1, 0),
-(8, 7, '新建菜单', '222', '22', NULL, 1, '1', '11', 22, 0);
+(8, 7, '新建菜单', '222', '22', NULL, 1, '1', '11', 22, 0),
+(9, 0, '22', '22', '22', NULL, 1, '1', NULL, 22, 1),
+(10, 0, '3213', '3123', '3123', NULL, 1, '1', '33', 33, 1),
+(11, 0, '22', '22', '22', NULL, 1, '2', NULL, 22, 0),
+(12, 10, '新建菜单11', '22', '2211', NULL, 1, '1', '22', 22333, 1),
+(13, 12, '新建菜单', '22', '222', NULL, 1, '1', '222', 222, 0);
 
 -- --------------------------------------------------------
 
@@ -132,9 +137,14 @@ CREATE TABLE `news` (
 --
 
 INSERT INTO `news` (`id`, `title`, `text_type`, `type_id`, `user_id`, `content`, `agree`, `frontImg`, `deleteFlag`, `status`) VALUES
-(18, '如何看待山西财经大学一学生跑步时猝死，校方通报称「已与亲属沟通」？', '1', 2, 1, ' 听到这类新闻很遗憾 ，也很无奈。 心源性猝死这事基本上99%就看“命”。 救回来，是命好。 救不回来，是常态。 我国（2018年）医院外人', 0, NULL, 1, 0),
+(18, '如何看待山西财经大学一学生跑步时猝死，校方通报称「已与亲属沟通」？', '1', 2, 1, ' 听到这类新闻很遗憾 ，也很无奈。 心源性猝死这事基本上99%就看“命”。 救回来，是命好。 救不回来，是常态。 我国（2018年）医院外人', 0, NULL, 1, 1),
 (17, 'NBA新赛季个战队大洗牌', '2', 2, 1, 'NBA新赛季个战队大洗牌，霍华德居然和罗斯同时在一个队，对此你怎么看这个问题', 0, '103', 1, 0),
-(19, '为什么就只有希特勒成恶魔了呢？', '2', 1, 1, '大家好，我是希特勒，当你看到这封信的时候，我已经自杀身亡了。 你们对我的一致评价我都知道，说我是反人类的大恶魔，盖棺定论，这我没什么好说的；成王败寇，我的德意志第三帝国已经被美、苏、英、法消灭', 0, '104', 1, 1);
+(19, '为什么就只有希特勒成恶魔了呢？', '2', 1, 1, '大家好，我是希特勒，当你看到这封信的时候，我已经自杀身亡了。 你们对我的一致评价我都知道，说我是反人类的大恶魔，盖棺定论，这我没什么好说的；成王败寇，我的德意志第三帝国已经被美、苏、英、法消灭', 0, '104', 1, 1),
+(20, '委屈翁二', '1', 1, 1, '111', 0, NULL, 1, 0),
+(21, '22', '1', 1, 1, '222', 0, NULL, 1, 0),
+(22, '22', '1', 1, 1, '22', 0, NULL, 1, 0),
+(23, '22', '2', 1, 1, '22', 0, '', 1, 0),
+(24, '22', '2', 1, 1, '22', 0, '', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -157,7 +167,8 @@ CREATE TABLE `type` (
 INSERT INTO `type` (`id`, `name`, `type`, `user_id`, `deleteFlag`) VALUES
 (1, '生活', 1, NULL, 1),
 (2, '体育', 2, 1, 1),
-(3, '其他', NULL, NULL, 1);
+(3, '其他', NULL, NULL, 1),
+(14, '2', NULL, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -173,15 +184,17 @@ CREATE TABLE `user` (
   `signature` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `avatar` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `work` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `ctime` varchar(255) COLLATE utf8_unicode_ci NOT NULL
+  `ctime` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `deleteFlag` int(11) NOT NULL DEFAULT '1'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- 转存表中的数据 `user`
 --
 
-INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `signature`, `avatar`, `work`, `ctime`) VALUES
-(1, 'zhengyongkai', '123456', '郑永楷', '111', 'http://s.yezgea02.com/1615973940679/WeChat77d6d2ac093e247c361f0b8a7aeb6c2a.png', '数据分析师', '1644655828615');
+INSERT INTO `user` (`id`, `username`, `password`, `nickname`, `signature`, `avatar`, `work`, `ctime`, `deleteFlag`) VALUES
+(1, 'zhengyongkai', '123456', '郑永楷', '我爱他，海誓山盟', 'http://s.yezgea02.com/1615973940679/WeChat77d6d2ac093e247c361f0b8a7aeb6c2a.png', '数据分析师', '1644655828615', 1),
+(3, 'cai', '123456', '菜菜子', '菜菜子并不菜', 'http://s.yezgea02.com/1615973940679/WeChat77d6d2ac093e247c361f0b8a7aeb6c2a.png', '程序员', '1644655828615', 1);
 
 -- --------------------------------------------------------
 
@@ -261,25 +274,25 @@ ALTER TABLE `img`
 -- 使用表AUTO_INCREMENT `menu`
 --
 ALTER TABLE `menu`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- 使用表AUTO_INCREMENT `news`
 --
 ALTER TABLE `news`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- 使用表AUTO_INCREMENT `type`
 --
 ALTER TABLE `type`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- 使用表AUTO_INCREMENT `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
