@@ -56,9 +56,9 @@ class UserController extends Controller {
     const userInfo = await ctx.service.user.getUserByName(username);
     // 没找到说明没有该用户
     if (!userInfo || !userInfo.id) {
-      ctx.status = 401;
+      ctx.status = 500;
       ctx.body = {
-        code: 401,
+        code: 500,
         msg: '账号不存在',
         success: false,
         data: null,
@@ -67,9 +67,9 @@ class UserController extends Controller {
     }
     // 找到用户，并且判断输入密码与数据库中用户密码。
     if (userInfo && password !== userInfo.password) {
-      ctx.status = 401;
+      ctx.status = 500;
       ctx.body = {
-        code: 401,
+        code: 500,
         msg: '账号密码错误',
         success: false,
         data: null,
@@ -162,6 +162,22 @@ class UserController extends Controller {
         },
       };
     }
+  }
+  async getUserInfoById() {
+    const { ctx } = this;
+    const { id } = ctx.query;
+    const userInfo = await ctx.service.user.getUserById(id);
+    ctx.body = {
+      code: 200,
+      msg: '请求成功',
+      data: {
+        id: userInfo.id,
+        username: userInfo.username,
+        signature: userInfo.signature || '',
+        avatar: userInfo.avatar || defaultAvatar,
+        nickname: userInfo.nickname || '不知名先生',
+      },
+    };
   }
 
   async getUserList() {

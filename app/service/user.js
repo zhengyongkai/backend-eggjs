@@ -23,6 +23,31 @@ class UserService extends Service {
       return null;
     }
   }
+
+  async getUserById(id) {
+    const { app } = this;
+    try {
+      const result = await app.mysql.get('user', { id });
+      return result;
+    } catch (error) {
+      return null;
+    }
+  }
+  async getUserList(params) {
+    const { app } = this;
+    const { whereObj, limit, offset } = params;
+    try {
+      const list = await app.mysql.select('user', {
+        where: whereObj,
+        limit,
+        offset,
+      });
+      const total = await app.mysql.count('user', whereObj);
+      return { list, total };
+    } catch (error) {
+      throw Error(error);
+    }
+  }
   async register(params) {
     const { app } = this;
     try {

@@ -5,7 +5,7 @@ const Controller = require('egg').Controller;
 const { Configuration, OpenAIApi } = require('openai');
 
 const configuration = new Configuration({
-  apiKey: '',
+  apiKey: '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',
 });
 const openai = new OpenAIApi(configuration);
 
