@@ -118,6 +118,7 @@ class UserController extends Controller {
         avatar: userInfo.avatar || defaultAvatar,
         nickname: userInfo.nickname || '不知名先生',
         menu,
+        sex: userInfo.sex,
       },
     };
   }
@@ -176,6 +177,7 @@ class UserController extends Controller {
         signature: userInfo.signature || '',
         avatar: userInfo.avatar || defaultAvatar,
         nickname: userInfo.nickname || '不知名先生',
+        sex: userInfo.sex,
       },
     };
   }

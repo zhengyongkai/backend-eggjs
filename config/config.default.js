@@ -48,13 +48,14 @@ module.exports = (appInfo) => {
     // 单数据库信息配置
     client: {
       // host
-      host: '134.175.103.137',
+      // host: '134.175.103.137',
+      host: '127.0.0.1',
       // 端口号
       port: '3306',
       // 用户名
       user: 'root',
       // 密码
-      password: 'root', // 初始化密码，没设置的可以不写
+      password: '123456', // 初始化密码，没设置的可以不写
       // 数据库名
       database: 'egg', // 我们新建的数据库名称
     },

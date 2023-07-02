@@ -26,6 +26,14 @@ module.exports = (app) => {
   router.get('/api/menus/role/query', _jwt, controller.menu.query); //获取权限列表
   router.post('/api/menus/role/save', _jwt, controller.menu.saveMenu); //保存权限
   router.post('/api/menus/role/delete', _jwt, controller.menu.deleteMenu); //删除权限
+  // 任务
+  router.get('/api/task/query', _jwt, controller.task.query);
+  router.get('/api/task/queryDate', _jwt, controller.task.queryDate);
+  router.post('/api/task/saveTask', _jwt, controller.task.saveTask);
+  router.post('/api/task/delTask', _jwt, controller.task.delTask);
+  router.post('/api/task/finish', _jwt, controller.task.finishTask);
+  // 字典
+  router.get('/api/dict/query', _jwt, controller.dict.query);
   // router.get('/api/cache', controller.cache.index);
   app.ws.route('/chat/:token', _websocket, app.controller.chat.index);
 };
